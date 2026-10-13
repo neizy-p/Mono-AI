@@ -1,0 +1,26 @@
+name: Build APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download icon font
+        run: curl -L -o icons.ttf https://github.com/google/material-design-icons/raw/master/font/MaterialIcons-Regular.ttf
+
+      - name: Build APK
+        uses: ArtemSBulgakov/buildozer-action@v1
+        with:
+          command: buildozer android debug
+          buildozer_version: stable
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mono-ai-apk
+          path: bin/*.apk
